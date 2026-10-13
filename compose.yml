@@ -1,0 +1,43 @@
+name: idea-box
+
+networks:
+  idea-box-net:
+    driver: bridge
+
+volumes:
+  database-vol:
+    driver: local
+
+secrets:
+  dbadmin_secret:
+    file: ${PWD}/database/secret/dbadmin
+  postgres_secret:
+    file: ${PWD}/database/secret/postgres
+
+services:
+  database:
+    platform: linux/amd64
+    build: database/Dockerfile
+    image: dataengineer24/postgres-pgtap:16.3
+    container_name: database
+    restart: unless-stopped
+    ports:
+      - 5432:5432
+    env_file:
+      - path: database/.env
+    secrets:
+      - postgres_secret
+      - dbadmin_secret
+    volumes:
+      - database-vol:/var/lib/postgresql/data
+      - ./database/init/schemas:/tmp/schemas
+      - ./database/init/custom-postgresql.conf:/etc/postgresql/postgresql.conf
+      - ./database/init/scripts:/docker-entrypoint-initdb.d
+    networks:
+      - idea-box-net
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "${POSTGRES_USER:-postgres}", "-d", "${POSTGRES_DB:-postgres}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
