@@ -1,20 +1,11 @@
-import { Counter } from '@/components/counter';
+import UserTable from '@/components/userTable';
 
 
 export default function HomePage() {
   return (
     <>
-      <h1>Home</h1>
-      <Counter
-        initialValue={0}
-        label="Click Counter"
-        onIncrement={(newValue) => {
-          console.log(`Incremented to ${newValue}`);
-        }}
-        onDecrement={(newValue) => {
-          console.log(`Decremented to ${newValue}`);
-        }}
-      />
+      <h1>Home page</h1>
+      <UserTable />
     </>
   );
 };
