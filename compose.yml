@@ -15,9 +15,18 @@ secrets:
     file: ${PWD}/database/secret/postgres
 
 services:
+  ubuntu:
+    platform: linux/amd64
+    image: ubuntu:24.04
+    container_name: ubuntu
+    restart: unless-stopped
+    stdin_open: true
+    tty: true
   database:
     platform: linux/amd64
-    build: database/Dockerfile
+    build:
+      context: ${PWD}/database
+      dockerfile: Dockerfile
     image: dataengineer24/postgres-pgtap:16.3
     container_name: database
     restart: unless-stopped
@@ -41,3 +50,17 @@ services:
       timeout: 5s
       retries: 5
       start_period: 30s
+  frontend:
+    platform: linux/amd64
+    build:
+      context: ${PWD}/frontend
+      dockerfile: Dockerfile
+      args:
+        - UBUNTU_VERSION=${UBUNTU_VERSION}
+        - NODE_VERSION=${NODE_VERSION}
+    image: dataengineer24/frontend:0.1
+    container_name: frontend
+    restart: unless-stopped
+    ports:
+      - 3000:3000
+    command: ["npm", "run", "start"]
