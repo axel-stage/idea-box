@@ -1,17 +1,17 @@
-.react_router
-.git
+.react_router/
+.git/
+.vscode/
+.DS_Store/
 .gitignore
 .env
-.DS_Store
-.vscode
-.idea
 .dockerignore
 
 node_modules/
+build/
 scripts/
+dist/
+coverage/
 README.md
-dist
-coverage
 
 *.log
 npm-debug.log*
