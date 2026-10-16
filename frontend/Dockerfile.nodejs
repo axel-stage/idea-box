@@ -28,7 +28,7 @@ USER root
 ARG NODE_VERSION=24
 
 # Set working directory
-WORKDIR /app
+WORKDIR /frontend
 
 # install node
 RUN fnm install ${NODE_VERSION}
@@ -67,10 +67,10 @@ USER ${USERNAME}
 WORKDIR /home/${USERNAME}/frontend
 
 # Copy built application from build stage
-COPY --from=build --chown=${UID}:${GID} /app/package.json ./package.json
-COPY --from=build --chown=${UID}:${GID} /app/package-lock.json ./package-lock.json
-COPY --from=build --chown=${UID}:${GID} /app/node_modules ./node_modules
-COPY --from=build --chown=${UID}:${GID} /app/build ./build
+COPY --from=build --chown=${UID}:${GID} /frontend/package.json ./package.json
+COPY --from=build --chown=${UID}:${GID} /frontend/package-lock.json ./package-lock.json
+COPY --from=build --chown=${UID}:${GID} /frontend/node_modules ./node_modules
+COPY --from=build --chown=${UID}:${GID} /frontend/build ./build
 
 # install node for user
 RUN fnm install ${NODE_VERSION}

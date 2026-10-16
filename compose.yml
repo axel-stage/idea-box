@@ -26,8 +26,10 @@ services:
     platform: linux/amd64
     build:
       context: ${PWD}/database
-      dockerfile: Dockerfile
-    image: dataengineer24/postgres-pgtap:16.3
+      dockerfile: Dockerfile.postgres
+      args:
+        - POSTGRES_VERSION=${POSTGRES_VERSION}
+    image: dataengineer24/postgres-pgtap:${POSTGRES_VERSION}
     container_name: database
     restart: unless-stopped
     ports:
@@ -48,6 +50,29 @@ services:
       timeout: 5s
       retries: 5
       start_period: 30s
+
+  backend:
+    platform: linux/amd64
+    build:
+      context: ${PWD}/backend
+      dockerfile: Dockerfile.python
+      args:
+        - UBUNTU_VERSION=${UBUNTU_VERSION}
+        - PYTHON_VERSION=${PYTHON_VERSION}
+    image: dataengineer24/backend:0.1
+    container_name: backend
+    restart: unless-stopped
+    ports:
+      - ${BACKEND_PORT}:${BACKEND_PORT}
+    # stdin_open: true
+    # tty: true
+    entrypoint: /bin/bash
+    command:
+      - -c
+      - |
+        python src/main.py
+
+
   frontend:
     platform: linux/amd64
     build:
