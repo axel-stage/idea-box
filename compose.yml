@@ -15,13 +15,13 @@ secrets:
     file: ${PWD}/database/secret/postgres
 
 services:
-  ubuntu:
-    platform: linux/amd64
-    image: ubuntu:24.04
-    container_name: ubuntu
-    restart: unless-stopped
-    stdin_open: true
-    tty: true
+  # ubuntu-dev:
+  #   platform: linux/amd64
+  #   image: ubuntu:24.04
+  #   container_name: ubuntu-dev
+  #   restart: unless-stopped
+  #   stdin_open: true
+  #   tty: true
   database:
     platform: linux/amd64
     build:
@@ -31,7 +31,7 @@ services:
     container_name: database
     restart: unless-stopped
     ports:
-      - 5432:5432
+      - ${DATABASE_PORT}:${DATABASE_PORT}
     env_file:
       - path: database/.env
     secrets:
@@ -42,8 +42,6 @@ services:
       - ./database/init/schemas:/tmp/schemas
       - ./database/init/custom-postgresql.conf:/etc/postgresql/postgresql.conf
       - ./database/init/scripts:/docker-entrypoint-initdb.d
-    networks:
-      - idea-box-net
     healthcheck:
       test: ["CMD", "pg_isready", "-U", "${POSTGRES_USER:-postgres}", "-d", "${POSTGRES_DB:-postgres}"]
       interval: 10s
@@ -54,13 +52,22 @@ services:
     platform: linux/amd64
     build:
       context: ${PWD}/frontend
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.nodejs
       args:
         - UBUNTU_VERSION=${UBUNTU_VERSION}
         - NODE_VERSION=${NODE_VERSION}
+        - GID=${FRONTEND_GID}
+        - GROUPNAME=${FRONTEND_GROUPNAME}
+        - UID=${FRONTEND_UID}
+        - USERNAME=${FRONTEND_USERNAME}
+        - PORT=${FRONTEND_PORT}
     image: dataengineer24/frontend:0.1
     container_name: frontend
     restart: unless-stopped
     ports:
-      - 3000:3000
-    command: ["npm", "run", "start"]
+      - ${FRONTEND_PORT}:${FRONTEND_PORT}
+    entrypoint: /bin/bash
+    command:
+      - -c
+      - |
+        fnm exec --using=${NODE_VERSION} npm run start
