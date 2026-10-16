@@ -1,0 +1,66 @@
+# single stage build
+###############################################################################
+ARG UBUNTU_VERSION=24.04
+
+FROM ubuntu:${UBUNTU_VERSION}
+#SHELL ["/bin/bash", "-o", "pipefail", "-c"]
+USER root
+
+# Set build-time environment variables
+ARG PYTHON_VERSION=3.14
+ARG GID=1001
+ARG GROUPNAME="pythons"
+ARG UID=1001
+ARG USERNAME="backendadmin"
+ARG PORT=8080
+
+# install uv dependencies
+RUN apt update -y && \
+    apt install -y --no-install-recommends \
+      ca-certificates \
+      curl && \
+    apt clean && \
+    rm -rf /var/lib/apt/lists/*
+
+# install uv
+COPY --from=ghcr.io/astral-sh/uv:0.12.19 /uv /uvx /bin/
+
+# Create non-root user
+RUN groupadd --gid ${GID} ${GROUPNAME} && \
+    useradd -g ${GID} -u ${UID} --create-home --shell /bin/bash ${USERNAME}
+
+# Switch to non-root user
+USER ${USERNAME}
+
+# Keeps Python from buffering stdout and stderr to avoid situations where
+# the application crashes without emitting any logs due to buffering.
+ENV PYTHONUNBUFFERED=1
+# Enable bytecode compilation
+ENV UV_COMPILE_BYTECODE=1
+# Copy from the cache instead of linking since it's a mounted volume
+ENV UV_LINK_MODE=copy
+# Omit development dependencies
+ENV UV_NO_DEV=1
+# Ensure installed tools can be executed out of the box
+ENV UV_TOOL_BIN_DIR=/usr/local/bin
+
+# Create app directory
+WORKDIR /home/${USERNAME}/backend
+
+# copy project dependencies
+COPY --chown=${UID}:${GID} ./uv.lock ./uv.lock
+COPY --chown=${UID}:${GID} ./pyproject.toml ./pyproject.toml
+
+# install dependencies
+# install python
+RUN uv python install ${PYTHON_VERSION} && \
+    uv python pin ${PYTHON_VERSION} && \
+    uv sync --locked --no-install-project
+
+# update global path var
+ENV PATH="/home/${USERNAME}/backend/.venv/bin:$PATH"
+
+# copy project code
+COPY --chown=${UID}:${GID} ./src ./src
+COPY --chown=${UID}:${GID} ./tests ./tests
+COPY --chown=${UID}:${GID} ./.env ./.env
