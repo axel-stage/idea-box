@@ -1,10 +1,10 @@
 import UserTable from '@/components/userTable';
 
 
-export default function HomePage() {
+export default function LandingPage() {
   return (
     <>
-      <h1>Home page</h1>
+      <h1>Landing</h1>
       <UserTable />
     </>
   );
