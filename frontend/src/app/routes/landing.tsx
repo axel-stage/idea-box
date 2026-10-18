@@ -1,11 +1,7 @@
-import UserTable from '@/components/userTable';
-
+import Hero from '@/components/Hero';
 
 export default function LandingPage() {
   return (
-    <>
-      <h1>Landing</h1>
-      <UserTable />
-    </>
+    <Hero/>
   );
 };

@@ -19,22 +19,38 @@ Charter, Times, Times New Roman, Georgia
 
 /* These CSS variables are global, so they are available in all CSS modules */
 :root {
-  /* Core surfaces */
-  --color-background: #0f172a;
-  --color-navigation: #15203a;
-  --color-box-background: #1e293b;
-  --color-box-dark: #334155;
+  /* Core colors */
+  --color-background: #0f172a; /* Prussian Blue */
+  --color-navigation: #172441;
+  --color-box-background: #203159;
 
-  /* Brand palette */
-  --color-brand-shade-9: #00376c;
-  --color-brand-shade-6: #0055a7;
-  --color-brand-shade-3: #0073e2;
-  --color-brand-prime: #1e90ff;
-  --color-brand-tint-3: #59adff;
-  --color-brand-tint-6: #94caff;
-  --color-brand-tint-9: #cfe7ff;
-  --color-brand-hue: #ff8d1e;
-  --color-brand-accent: #ff1e90;
+  --color-surface: #003153;
+  --color-border: #395060;
+  --color-text: #9EAAB3;
+
+  /* color palettes */
+
+  --color-muted-shade-3: #202528;
+  --color-muted-shade-2: #4A555E;
+  --color-muted-shade-1: #768693;
+  --color-muted: #9EAAB3;
+  --color-muted-tint-1: #B3BCC3;
+  --color-muted-tint-2: #CED4D9;
+  --color-muted-tint-3: #DCE1E4;
+
+  --color-brand-shade-3: #00264C;
+  --color-brand-shade-2: #004285;
+  --color-brand-shade-1: #0068D0;
+  --color-brand-prime: #0A84FF; /* Azure Blue */
+  --color-brand-tint-1: #3F9FFF;
+  --color-brand-tint-2: #85C2FF;
+  --color-brand-tint-3: #CBE5FF;
+
+  --color-hue-shade-2: #7C6E13;
+  --color-hue-shade-1: #C2AC1E;
+  --color-hue: #E0CA3C;   /* Golden Glow */
+
+  --color-accent: #BA5C12; /* Autum Amber */
 
   /* Semantic colors */
   --color-blue-100: #e0f2fe;
@@ -56,7 +72,7 @@ Charter, Times, Times New Roman, Georgia
   --color-indigo-700: #4338ca;
 
   /* Neutral palette */
-  --color-grey-50: #f9fafb;
+  --color-grey-050: #f9fafb;
   --color-grey-100: #f3f4f6;
   --color-grey-200: #e5e7eb;
   --color-grey-300: #d1d5db;
@@ -93,7 +109,7 @@ html {
 
 body {
   font-family: "Manrope", sans-serif;
-  color: var(--color-grey-100);
+  color: var(--color-text);
   min-height: 100vh;
   line-height: 1.5;
   font-size: 1.5rem;
@@ -103,7 +119,7 @@ body {
 }
 
 a {
-  color: var(--color-grey-100);
+  color: var(--color-text);
 }
 
 ul {

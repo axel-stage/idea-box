@@ -1,0 +1,161 @@
+.neon-flow {
+  position: relative;
+  width: 100%;
+  max-width: 800px;
+  margin-inline: auto;
+  aspect-ratio: 4 / 3;
+  isolation: isolate;
+  overflow: hidden;
+  background:
+    radial-gradient(
+      ellipse at 50% 50%,
+      rgb(49 46 129 / 18%),
+      transparent 65%
+    );
+}
+
+.neon-flow__svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+/* Slowly breathing background glow */
+.neon-flow__ambient {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: neon-breathe 7s ease-in-out infinite;
+}
+
+/* Rotating orbital geometry */
+.neon-flow__orbit {
+  fill: none;
+  stroke: #a5b4fc;
+  stroke-width: 0.7;
+  opacity: 0.19;
+  transform-box: view-box;
+  transform-origin: 400px 300px;
+  animation: neon-orbit 50s linear infinite;
+}
+
+/* Animated flowing lines */
+.neon-flow__ribbon {
+  stroke-dasharray: 10 14 70 18;
+  animation: neon-flow-line 12s linear infinite;
+}
+
+.neon-flow__ribbon--two {
+  opacity: 0.65;
+  stroke-dasharray: 5 18 45 12;
+  animation-duration: 16s;
+  animation-direction: reverse;
+}
+
+.neon-flow__ribbon--three {
+  opacity: 0.45;
+  stroke-dasharray: 3 12 24 16;
+  animation-duration: 20s;
+}
+
+/* Energy core */
+.neon-flow__core {
+  transform-box: view-box;
+  transform-origin: 400px 300px;
+  animation: neon-core 5s ease-in-out infinite;
+}
+
+.neon-flow__core-ring {
+  fill: none;
+  stroke: #a5f3fc;
+  stroke-width: 0.9;
+  opacity: 0.65;
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: neon-ring 6s ease-in-out infinite;
+}
+
+.neon-flow__core-ring--inner {
+  stroke: #c4b5fd;
+  opacity: 0.8;
+  animation-delay: -3s;
+}
+
+/* Tiny ambient particles */
+.neon-flow__stars {
+  fill: #c4b5fd;
+  animation: neon-twinkle 4s ease-in-out infinite alternate;
+}
+
+/* Keyframes */
+@keyframes neon-breathe {
+  0%, 100% {
+    transform: scale(0.92);
+    opacity: 0.65;
+  }
+  50% {
+    transform: scale(1.08);
+    opacity: 1;
+  }
+}
+
+@keyframes neon-orbit {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes neon-flow-line {
+  from {
+    stroke-dashoffset: 0;
+  }
+  to {
+    stroke-dashoffset: -224;
+  }
+}
+
+@keyframes neon-core {
+  0%, 100% {
+    transform: scale(0.96);
+    opacity: 0.85;
+  }
+  50% {
+    transform: scale(1.04);
+    opacity: 1;
+  }
+}
+
+@keyframes neon-ring {
+  0%, 100% {
+    transform: scale(0.96);
+    opacity: 0.4;
+  }
+  50% {
+    transform: scale(1.08);
+    opacity: 0.9;
+  }
+}
+
+@keyframes neon-twinkle {
+  from { opacity: 0.35; }
+  to { opacity: 1; }
+}
+
+/* Accessibility */
+@media (prefers-reduced-motion: reduce) {
+  .neon-flow *,
+  .neon-flow *::before,
+  .neon-flow *::after {
+    animation: none !important;
+  }
+}
+
+/* Small screens */
+@media (max-width: 600px) {
+  .neon-flow {
+    max-width: 480px;
+  }
+}

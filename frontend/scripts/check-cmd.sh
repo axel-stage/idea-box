@@ -1,7 +1,7 @@
 # type checking
 ###############
 # Run type checking once (includes React Router type generation)
-npm run typecheck
+npm run type-check
 # Run type checking in watch mode (reruns on file changes)
 npx tsc --watch
 # Run type checking for specific files
