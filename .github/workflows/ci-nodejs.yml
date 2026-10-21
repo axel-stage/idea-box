@@ -1,21 +1,58 @@
-name: Continiuous Integration NodeJS
+name: Continiuous Integration Frontend
 
 on:
   workflow_dispatch:
-
+    inputs:
+      use-cache:
+        description: Execute cache step
+        type: boolean
+        default: true
+      node-version:
+        description: Node version
+        type: choice
+        options:
+          - 24.x
+          - 22.x
+          - 20.x
+          - 18.x
+        default: 24.x
 jobs:
-  code-checks:
-    name: Code check
-    runs-on: ubuntu latest
+  code-validation:
+    name: Code validation
+    runs-on: ubuntu-latest
     defaults:
       run:
         working-directory: ./frontend
     steps:
-      - uses: actions/checkout@v6
-      - uses: actions/setup-node@v6
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
         with:
-          node-version: 24
-      - run: npm ci
+          node-version: ${{ input.node-version }}
+      - name: Download cached dependencies
+        uses: actions/cache@v6
+        if: ${{ inputs.use-cache }}
+        id: cache-dependencies
+        with:
+          path: frontend/node_modules
+          key: deps-node-modules-${{ hashFiles('frontend/package-lock.json') }}
+      - name: Install dependencies
+        if: steps.cache-dependencies.outputs.cache-hit != true
+        run: npm ci
       - run: npm run lint
       - run: npm run type-check
       - run: npm run format:check
+  build-frontend:
+    name: Build frontend
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./frontend
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+      - name: Install nodejs dependencies
+        run: npm ci
+      - name: Build
+        run: npm run build
