@@ -1,4 +1,4 @@
-name: Continiuous Integration Frontend
+name: Continiuous Integration Frontend (node.js)
 
 on:
   workflow_dispatch:
@@ -28,15 +28,15 @@ jobs:
       - uses: actions/setup-node@v7
         with:
           node-version: ${{ inputs.node-version }}
-      - name: Download cached dependencies
+      - name: Download cached node.js dependencies
         uses: actions/cache@v6
         if: ${{ inputs.use-cache }}
-        id: cache-dependencies
+        id: nodejs-dependencies
         with:
           path: frontend/node_modules
           key: deps-node-modules-${{ hashFiles('frontend/package-lock.json') }}
-      - name: Install nodejs dependencies
-        if: steps.cache-dependencies.outputs.cache-hit != true
+      - name: Install node.js dependencies
+        if: steps.nodejs-dependencies.outputs.cache-hit != 'true'
         run: npm ci
       - run: npm run lint
       - run: npm run type-check
@@ -55,12 +55,12 @@ jobs:
       - name: Download cached node.js dependencies
         uses: actions/cache@v6
         if: ${{ inputs.use-cache }}
-        id: cache-dependencies
+        id: nodejs-dependencies
         with:
           path: frontend/node_modules
           key: deps-node-modules-${{ hashFiles('frontend/package-lock.json') }}
-      - name: Install nodejs dependencies
-        if: steps.cache-dependencies.outputs.cache-hit != 'true'
+      - name: Install node.js dependencies
+        if: steps.nodejs-dependencies.outputs.cache-hit != 'true'
         run: npm ci
       - name: Build frontend app
         run: npm run build
