@@ -35,7 +35,7 @@ jobs:
         with:
           path: frontend/node_modules
           key: deps-node-modules-${{ hashFiles('frontend/package-lock.json') }}
-      - name: Install dependencies
+      - name: Install nodejs dependencies
         if: steps.cache-dependencies.outputs.cache-hit != true
         run: npm ci
       - run: npm run lint
@@ -52,7 +52,15 @@ jobs:
       - uses: actions/setup-node@v7
         with:
           node-version: 24
+      - name: Download cached node.js dependencies
+        uses: actions/cache@v6
+        if: ${{ inputs.use-cache }}
+        id: cache-dependencies
+        with:
+          path: frontend/node_modules
+          key: deps-node-modules-${{ hashFiles('frontend/package-lock.json') }}
       - name: Install nodejs dependencies
+        if: steps.cache-dependencies.outputs.cache-hit != 'true'
         run: npm ci
-      - name: Build
+      - name: Build frontend app
         run: npm run build
