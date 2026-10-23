@@ -43,7 +43,7 @@ jobs:
       - name: Setup and install node.js dependencies
         uses: ./.github/actions/composite-cache-deps
         with:
-          node-version: 24.x
+          nodejs-version: 24.x
           working-dir: ./frontend
           target-environment: dev
       - run: npm run lint
