@@ -1,0 +1,6 @@
+name: Update npm dependencies
+description: Checks if there are any updates to npm packages and creates PR with updated package*.json files.
+
+runs:
+  using: node24
+  main: index.js
