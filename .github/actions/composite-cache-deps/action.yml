@@ -1,0 +1,35 @@
+name: Cache node.js dependencies
+description: This action caches node.js dependencies based on the package-lock.json file.
+
+inputs:
+  nodejs-version:
+    description: Used node.js version
+    default: 24.x
+    required: true
+  working-dir:
+    description: Working directory of the application
+    default: .
+    required: false
+  target-environment:
+    description: dev or prod, controlls if dev dependencies are installed
+    default: dev
+    required: false
+
+runs:
+  using: composite
+  steps:
+    - name: Setup node.js version ${{ inputs.nodejs-version }}
+      uses: actions/setup-node@v7
+      with:
+        node-version: ${{ inputs.nodejs-version }}
+    - name: Cache dependencies
+      id: cache
+      uses: actions/cache@v6
+      with:
+        path: ${{ inputs.working-dir }}/node_modules
+        key: node-modules-${{ inputs.target-environment }}-${{ hashFiles(format('{0}/{1}', inputs.working-dir , 'package-lock.json')) }}
+    - name: Install dependencies
+      if: steps.cache.outputs.cache-hit != 'true'
+      working-directory: ${{ inputs.working-dir }}
+      shell: bash
+      run: ${{ inputs.target-environment == 'dev' && 'npm ci' || 'npm ci --omit dev' }}
