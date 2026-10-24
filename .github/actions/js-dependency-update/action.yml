@@ -1,8 +1,14 @@
-name: Update npm dependencies
-description: Checks if there are any updates to npm packages and creates PR with updated package*.json files.
+name: Hello World
+description: Greet someone and record the time
+
+inputs:
+  who-to-greet: # id of input
+    description: Who to greet
+    required: true
+    default: World
 
 outputs:
-  time:
+  time: # id of output
     description: The time we greeted you
 
 runs:

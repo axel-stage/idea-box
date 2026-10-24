@@ -437,7 +437,3 @@ __marimo__/
 # Streamlit
 .streamlit/secrets.toml
 
-
-# not (include)
-############################################################
-!.github/actions/**/node_modules
