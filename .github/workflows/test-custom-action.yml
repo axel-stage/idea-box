@@ -1,5 +1,6 @@
 name: Test js custom action
 run-name: Test js custom action
+
 on:
   workflow_dispatch:
 
@@ -11,7 +12,7 @@ jobs:
     steps:
       - uses: actions/checkout@v7
       - name: Check for depencies update
-        uses: .github/actions/js-dependency-update
+        uses: ./.github/actions/js-dependency-update/
         id: hello
         with:
           who-to-greet: Mona the Octocat
