@@ -8,9 +8,6 @@ jobs:
   dependency-update:
     name: node.js dependency update
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: ./frontend
     steps:
       - uses: actions/checkout@v7
       - name: Check for depencies update

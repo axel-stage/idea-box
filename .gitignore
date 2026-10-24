@@ -437,3 +437,6 @@ __marimo__/
 # Streamlit
 .streamlit/secrets.toml
 
+# exclude
+############################################################
+!.github/actions/js-dependency-update/dist
