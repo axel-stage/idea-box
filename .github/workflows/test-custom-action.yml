@@ -11,11 +11,9 @@ jobs:
     steps:
       - uses: actions/checkout@v7
       - name: Check for depencies update
-        uses: .github/actions/js-dependency-update/
+        uses: ./.github/actions/js-dependency-update/
         id: hello
         with:
           who-to-greet: Mona the Octocat
-
-      # Use the output from the `hello` step
       - name: Get the output time
         run: echo "The time was ${{ steps.hello.outputs.time }}"
