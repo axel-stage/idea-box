@@ -1,13 +1,3 @@
-const core = require('@actions/core');
+import { run } from './main'
 
-export async function run() {
-
-  try {
-    core.info('js custom action build');
-  }
-  catch (error) {
-    core.setFailed(error.message)
-  }
-}
-
-run();
+run()
