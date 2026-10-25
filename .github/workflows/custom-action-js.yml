@@ -1,0 +1,28 @@
+name: Custom Actions - js
+run-name: Custom Actions - js | BB - ${{ inputs.base-branch }} TB - ${{ inputs.target-branch }} WD - ${{ inputs.working-directory }}
+
+on:
+  workflow_dispatch:
+    inputs:
+      base-branch:
+        type: string
+        default: main
+      target-branch:
+        type: string
+        default: update-dependencies
+      working-directory:
+        type: string
+        default: frontend
+
+jobs:
+  dependency-update:
+    name: node.js dependency update
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - name: Check for depencies update
+        uses: ./.github/actions/js-dependency-update/
+        with:
+          base-branch: ${{ inputs.base-branch }}
+          target-branch: ${{ inputs.target-branch }}
+          working-directory: ${{ inputs.working-directory }}

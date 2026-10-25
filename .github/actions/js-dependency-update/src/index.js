@@ -1,18 +1,51 @@
 import * as core from "@actions/core";
 import * as github from "@actions/github";
+import * as exec from "@actions/exec";
 
-try {
-  // `who-to-greet` input defined in action metadata file
-  const nameToGreet = core.getInput("who-to-greet");
-  core.info(`Hello ${nameToGreet}!`);
 
-  // Get the current time and set it as an output variable
-  const time = new Date().toTimeString();
-  core.setOutput("time", time);
+const validateBranchName = ({branchName}) => /^[a-zA-Z0-9_\-\.\/]+$/.test(branchName)
+const validateDirectoryName = ({directoryName}) => /^[a-zA-Z0-9_\-\/]+$/.test(directoryName)
 
-  // Get the JSON webhook payload for the event that triggered the workflow
-  const payload = JSON.stringify(github.context.payload, undefined, 2);
-  core.info(`The event payload: ${payload}`);
-} catch (error) {
-  core.setFailed(error.message);
+async function run() {
+
+  // parse inputs
+  const baseBranch = core.getInput('base-branch')
+  const targetBranch = core.getInput('target-branch')
+  const githubToken = core.getInput('github-token')
+  const workingDirectory = core.getInput('working-directory')
+  const debug = core.getBooleanInput('debug')
+
+  core.setSecret(githubToken)
+
+  if(!validateBranchName({branchName: baseBranch})) {
+    core.setFailed('Invalid base-branch name')
+    return;
+  }
+  if(!validateBranchName({branchName: targetBranch})) {
+    core.setFailed('Invalid target-branch name')
+    return;
+  }
+  if(!validateDirectoryName({directoryName: workingDirectory})) {
+    core.setFailed('Invalid working-directory name')
+    return;
+  }
+
+  core.info(`[js dependency update] : base branch is ${baseBranch}`);
+  core.info(`[js dependency update] : target branch is ${targetBranch}`);
+  core.info(`[js dependency update] : working directory is ${workingDirectory}`);
+
+  await exec.exec('npm update', [], {
+    cwd: workingDirectory
+  });
+
+  const gitStatus =  await exec.getExecOutput('git status -s package*.json', [], {
+    cwd: workingDirectory
+  });
+  if(gitStatus.stdout.length > 0) {
+    core.info('[js dependency update] : There are updates available');
+  } else {
+    core.info('[js dependency update] : No updates at this point in time');
+  }
 }
+
+run();

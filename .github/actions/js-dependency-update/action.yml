@@ -1,15 +1,24 @@
-name: Hello World
-description: Greet someone and record the time
+name: Update npm dependencies
+description: Checks if there are updates to the npm packages and creates a PR with updated packege*.json files.
 
 inputs:
-  who-to-greet: # id of input
-    description: Who to greet
+  base-branch:
+    description: Branch for the dependency update checks
+    default: main
+    required: false
+  target-branch:
+    description: Branch form which the PR is created
+    default: update-dependencies
+    required: false
+  working-directory:
+    description: Working directory of the project
     required: true
-    default: World
-
-outputs:
-  time: # id of output
-    description: The time we greeted you
+  github-token:
+    description: Auth token with repo access (write access to content and PR)
+    required: true
+  debug:
+    description: Output debug message
+    default: false
 
 runs:
   using: node24
