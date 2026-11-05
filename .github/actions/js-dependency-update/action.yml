@@ -20,6 +20,10 @@ inputs:
     description: Output debug message
     default: false
 
+outputs:
+  updates-available:
+    description: Whether there are updates available.
+
 runs:
   using: node24
   main: dist/index.js
